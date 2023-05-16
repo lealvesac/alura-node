@@ -1,6 +1,7 @@
-import express, { json } from "express";
+import express from "express";
 import dataBase from "./config/dbConnect.js";
 import livros from "./models/Livro.js";
+import routes from "./routes/index.js";
 
 dataBase.on("error", console.log.bind(console, "Erro de conexão!"));
 dataBase.once("open", () => {
@@ -11,25 +12,13 @@ const app = express();
 
 app.use(express.json());
 
-// const livros = [
-//   { id: 1, titulo: "O Senhor dos Aneis." },
-//   { id: 2, titulo: "O Hobbit." },
-// ];
-
-app.get("/", (req, res) => {
-  res.status(200).send("Curso de Node");
-});
+routes(app);
 
 app.put("/livros/:id", (req, res) => {
   let index = buscalivros(req.params.id);
   res.json(livros[index]);
 });
 
-app.get("/livros", (req, res) => {
-  livros.find((err, livros) => {
-    res.status(200).json(livros);
-  });
-});
 
 app.post("/livros", (req, res) => {
   livros.push(req.body);
